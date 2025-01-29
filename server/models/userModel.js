@@ -43,7 +43,7 @@ userSchema.methods.toJSON = function(){
     return user;
 }
 
-//creating indexes for the user schema for faster search operations
+//creating indexes for the user schema for faster search operations and unique constraints
 
 userSchema.index({email:1});
 

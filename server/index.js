@@ -52,6 +52,7 @@ app.use(cors(
 ));
 
 app.use("/api",routes.baseRoutes);
+app.use("/api/user",routes.userRoutes);
 
 //starting the server
 app.listen(port,()=>{
