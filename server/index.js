@@ -7,6 +7,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose"; 
 import morgan  from "morgan";
 import helmet from "helmet";
+import * as routes from "./routes/index.js";
 
 //init a express server
 const app = express();
@@ -50,10 +51,7 @@ app.use(cors(
     }
 ));
 
-//test route
-app.get("/",(_req,res)=>{
-    res.send("Hello World");
-})
+app.use("/api",routes.baseRoutes);
 
 //starting the server
 app.listen(port,()=>{
