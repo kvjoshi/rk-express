@@ -20,3 +20,49 @@ export const createUser = expressAsyncHandler(async (req, res) => {
         res.status(500).json({ message: e.message });
     }
 });
+
+// login request controller function
+export const loginUser = expressAsyncHandler(async (req, res) => {
+    const {email, password} = req.body;
+    try{
+        //first check if email exists
+        const user = await User.findOne({email});
+
+		const cookieArgs = {
+			httpOnly: false,
+			secure: true,
+			sameSite: "none",
+			maxAge: 2 * 60 * 60 * 1000, // 2 hours
+		};
+
+        if(user){
+            //use schema method matchPassword to compare password
+
+            if( (await user.matchPassword(password))) {
+            // create token (JWT) and send it to the user
+                const token = userGenerateToken(user._id);
+            //this is a server side cookie this is not going to be accessible by the client application
+            //this is a secure way to store the token
+                res.cookie("accessToken", token, cookieArgs);
+
+                res.json({
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+                //token added here needs to be managed mannually by the client app
+                // for bearer token authentication. needs to be added to authorization header
+                token: token,
+            });
+        }
+        else{
+            res.status(401).json({ message: "Invalid password" });
+        }
+    }
+    else{
+            res.status(404).json({ message: "User not found" });
+        }
+    }catch (e) {
+        res.status(500).json({ message: e.message });
+    }
+})
+
