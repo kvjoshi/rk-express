@@ -33,6 +33,7 @@ export const loginUser = expressAsyncHandler(async (req, res) => {
 			secure: true,
 			sameSite: "none",
 			maxAge: 2 * 60 * 60 * 1000, // 2 hours
+            // domain:".example.com" // this is used to set the domain for the cookie
 		};
 
         if(user){
@@ -66,3 +67,8 @@ export const loginUser = expressAsyncHandler(async (req, res) => {
     }
 })
 
+// get user profile
+export const getUserProfile= expressAsyncHandler(async (req, res) => {
+const user = req.user;
+res.json(user);
+});
