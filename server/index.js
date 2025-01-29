@@ -56,6 +56,6 @@ app.get("/",(_req,res)=>{
 })
 
 //starting the server
-server.listen(port,()=>{
+app.listen(port,()=>{
     console.log("Server started at port ",port);
 })
