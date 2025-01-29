@@ -53,6 +53,7 @@ app.use(cors(
 
 app.use("/api",routes.baseRoutes);
 app.use("/api/user",routes.userRoutes);
+app.use("/api/book",routes.bookRoutes);
 
 //starting the server
 app.listen(port,()=>{
