@@ -21,3 +21,40 @@ export const createBook = expressAsyncHandler(async (req, res) => {
         res.status(500).json({ message: e.message });
     }
 });
+
+export const booksByUser = expressAsyncHandler(async (req, res) => {
+    try {
+        const user = req.user;
+        console.log("user", user);
+
+        const userId =  new ObjectId(user._id);
+        const books = await Book.aggregate([
+            { $match: { added_by: userId } }, // FIND
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "added_by",
+                    foreignField: "_id",
+                    as: "userDetails" 
+                } // BOOK.ADDED_BY == USER._ID
+                // RESPONSE WILL BE ARRY
+            },
+            { $unwind: "$userDetails" }, // UNWIND TO OBJECT
+            {
+                $project: {
+                    book_name: 1,
+                    info: 1,
+                    added_by: 1,
+                    userDetails: {
+                        _id: 1,
+                        name: 1,
+                        email: 1
+                    }
+                }
+            }
+        ]);
+        res.json(books);
+    } catch (e) {
+        res.status(404).json({ message: e.message });
+    }
+});
